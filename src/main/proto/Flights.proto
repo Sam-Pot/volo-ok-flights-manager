@@ -1,0 +1,125 @@
+syntax = "proto3";
+package flightsManager;
+
+// PROMOTION
+service PromotionService {
+  rpc saveOrUpdate(Promotion) returns (Promotion) {}
+  rpc delete (IdDto) returns (Promotion) {}
+  rpc findAll(QueryDto) returns (PaginatedPromotions) {};
+  rpc findOne(IdDto) returns (Promotion) {};
+  rpc getLoyaltyCustomerPromotions(QueryDto) returns (PaginatedPromotions){};
+}
+
+message IdDto { string id = 1; }
+
+message QueryDto { string query = 1; };
+
+message Promotion {
+  string id = 1;                 // microservice
+  string name = 2;               // admin
+  uint64 startDate = 3;          // admin
+  uint64 endDate = 4;            // admin
+  float discountPercentage = 5;  // admin
+  bool onlyForLoyalCustomer = 6; // admin
+}
+
+message PaginatedPromotions {
+  uint32 elementsNumber = 1;
+  repeated Promotion promotions = 2;
+}
+
+// FARE
+service FareService {
+  rpc saveOrUpdate(Fare) returns (Fare) {}
+  rpc delete (IdDto) returns (Fare) {}
+  rpc findAll(QueryDto) returns (PaginatedFares) {};
+  rpc findOne(IdDto) returns (Fare) {};
+}
+
+message Fare {
+  string id = 1;               // microservice
+  string name = 2;             // admin
+  float price = 3;             // admin
+  bool editable = 4;           // admin
+  float modificationPrice = 5; // admin
+}
+
+message PaginatedFares {
+  uint32 elementsNumber = 1;
+  repeated Fare fares = 2;
+}
+
+// FLIGHTS
+
+service FlightService {
+  rpc saveOrUpdate(Flight) returns (Flight) {};
+  rpc delete (IdDto) returns (Flight) {};
+  rpc find(QueryDto) returns (PaginatedFlights) {};
+  rpc findOne(IdDto) returns (Flight) {};
+  rpc generateFlights(SearchFlightsDto) returns (AvailableFlights){};
+}
+
+message Flight {
+  string id = 1;               // microservice
+  string name = 2;             // admin
+  uint64 startDateTime = 3;    // admin
+  uint64 endDateTime = 4;      // admin
+  float distance = 5;          // microservice
+  Frequency frequencyType = 6; // admin
+  uint32 frequency = 7;        // admin
+  Airport departure = 8;       // admin
+  Airport destination = 9;     // admin
+  Promotion promotion = 10;    // admin
+  repeated Fare fares = 11;    // admin
+}
+enum Frequency {
+  HOURLY = 0;
+  DAILY = 1;
+  WEEKLY = 2;
+  MONTHLY = 3;
+}
+
+message PaginatedFlights {
+  uint32 elementsNumber = 1;
+  repeated Flight flights = 2;
+}
+
+// AIRPORTS
+
+/*service AirportService {
+  rpc findByMunicipality(Municipality) returns (Airports) {};
+}*/
+
+// message Municipality { string name = 1; }
+
+// message Airports { repeated Airport airports = 1; }
+
+message Airport {
+  string id = 1;
+  string name = 2;
+  string municipality = 3;
+  string municipalityCode = 4;
+  string nationalCode = 5;
+}
+
+message SearchFlightsDto{
+  string departureMunicipalityCode = 1;
+  string destinationMunicipalityCode = 2;
+  uint64 departureDate = 3;
+  Fare fare = 4;
+}
+
+message AvailableFlights{
+  repeated AvailableFlight availableFlight = 1;
+}
+
+message AvailableFlight {
+  string id = 1;               // microservice
+  string name = 2;             // admin
+  uint64 departureDateTime = 3;    // admin
+  float distance = 4;          // microservice
+  Airport departure = 5;       // admin
+  Airport destination = 6;     // admin
+  Promotion promotion = 7;    // admin
+  repeated Fare fares = 8;    // admin
+}

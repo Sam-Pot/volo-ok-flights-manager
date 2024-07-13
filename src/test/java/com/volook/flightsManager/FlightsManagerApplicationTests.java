@@ -1,4 +1,4 @@
-package com.volok.flightsManager;
+package com.volook.flightsManager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

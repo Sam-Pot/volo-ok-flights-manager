@@ -1,4 +1,4 @@
-package com.volok.flightsManager;
+package com.volook.flightsManager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

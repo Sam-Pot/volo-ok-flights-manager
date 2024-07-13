@@ -1,4 +1,4 @@
-package com.volok.flightsManager;
+package com.volook.flightsManager;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
