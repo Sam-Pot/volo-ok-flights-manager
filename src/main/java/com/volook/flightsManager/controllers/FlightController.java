@@ -12,9 +12,9 @@ import com.volook.flightsManager.converters.FlightToFlightDto;
 import com.volook.flightsManager.services.FlightService;
 
 import flightsManager.FlightServiceGrpc;
-import flightsManager.Flights.AvailableFlight;
 import flightsManager.Flights.AvailableFlights;
 import flightsManager.Flights.Flight;
+import flightsManager.Flights.FlightDto;
 import flightsManager.Flights.IdDto;
 import flightsManager.Flights.PaginatedFlights;
 import flightsManager.Flights.QueryDto;
@@ -49,14 +49,15 @@ public class FlightController extends FlightServiceGrpc.FlightServiceImplBase {
 		}
 	}
 
-	public void saveOrUpdate(Flight flight, StreamObserver<Flight> responseObserver) {
+	public void saveOrUpdate(FlightDto flight, StreamObserver<Flight> responseObserver) {
 		if (flight == null) {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 		try {
-			responseObserver.onNext(entityToDto.convert(this.flightService.saveOrUpdate(dtoToEntity.convert(flight))));
+			responseObserver.onNext(entityToDto.convert(this.flightService.saveOrUpdate(flight)));
 			responseObserver.onCompleted();
 		} catch (Exception e) {
+			e.printStackTrace();
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}
@@ -69,7 +70,7 @@ public class FlightController extends FlightServiceGrpc.FlightServiceImplBase {
 			Flight flightToDelete = entityToDto.convert(this.flightService.findOne(idDto.getId()));
 			this.flightService.delete(idDto.getId());
 			responseObserver
-					.onNext(entityToDto.convert(this.flightService.saveOrUpdate(dtoToEntity.convert(flightToDelete))));
+					.onNext(entityToDto.convert(dtoToEntity.convert(flightToDelete)));
 			responseObserver.onCompleted();
 		} catch (Exception e) {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
@@ -78,7 +79,7 @@ public class FlightController extends FlightServiceGrpc.FlightServiceImplBase {
 
 	public void find(QueryDto request, StreamObserver<PaginatedFlights> responseObserver) {
 		try {
-			List<com.volook.flightsManager.entities.Flight> flights = this.flightService.findAll(null);
+			List<com.volook.flightsManager.entities.Flight> flights = this.flightService.findAll();
 			List<Flight> response = new LinkedList<>();
 			for (com.volook.flightsManager.entities.Flight elem : flights) {
 				response.add(entityToDto.convert(elem));
@@ -88,6 +89,7 @@ public class FlightController extends FlightServiceGrpc.FlightServiceImplBase {
 			responseObserver.onNext(paginatedFlights);
 			responseObserver.onCompleted();
 		} catch (Exception e) {
+			e.printStackTrace();
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}
@@ -97,11 +99,16 @@ public class FlightController extends FlightServiceGrpc.FlightServiceImplBase {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 		try {
-			List<AvailableFlight> flights = this.flightService.generateAvailableFlights(request.getDepartureMunicipalityCode(), 
-					request.getDestinationMunicipalityCode(),fareDtoToFare.convert(request.getFare()), new Date(request.getDepartureDate()));
-			responseObserver.onNext(AvailableFlights.newBuilder().addAllAvailableFlight(flights).build());
+			List<com.volook.flightsManager.entities.Flight> flights = this.flightService.generateAvailableFlights(request.getDepartureAirportId(), 
+					request.getDestinationAirportId(),fareDtoToFare.convert(request.getFare()), new Date(request.getDepartureDate()));
+			List<Flight> availableFlights = new LinkedList<>();
+			for(com.volook.flightsManager.entities.Flight f: flights) {
+				availableFlights.add(entityToDto.convert(f));
+			}
+			responseObserver.onNext(AvailableFlights.newBuilder().addAllAvailableFlight(availableFlights).build());
 			responseObserver.onCompleted();
 		}catch(Exception e) {
+			e.printStackTrace();
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}

@@ -14,7 +14,9 @@ public class PromotionDtoToPromotion implements Converter<flightsManager.Flights
 	@Override
 	public com.volook.flightsManager.entities.Promotion convert(Promotion source) {
 		com.volook.flightsManager.entities.Promotion promotion = new com.volook.flightsManager.entities.Promotion();
-		promotion.setId(UUID.fromString(source.getId()));
+		if(source.getId()!=null && !source.getId().isEmpty()) {
+			promotion.setId(UUID.fromString(source.getId()));
+		}
 		promotion.setName(source.getName());
 		promotion.setStartDate(new Date(source.getStartDate()));
 		promotion.setEndDate(new Date(source.getEndDate()));

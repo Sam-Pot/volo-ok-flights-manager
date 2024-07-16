@@ -34,6 +34,7 @@ public class FlightToFlightDto implements Converter<com.volook.flightsManager.en
 				.setDistance(source.getDistance())
 				.setFrequencyType(flightsManager.Flights.Frequency.valueOf(source.getFrequencyType().toString()))
 				.setFrequency(source.getFrequency())
+				.setSeats(source.getSeats())
 				.setDeparture(airportToAirportDto.convert(source.getDeparture()))
 				.setDestination(airportToAirportDto.convert(source.getDestination()))
 				.setPromotion(promotionToPromotionDto.convert(source.getPromotion()))

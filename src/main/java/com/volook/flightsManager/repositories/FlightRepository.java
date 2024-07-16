@@ -17,15 +17,15 @@ public interface FlightRepository extends CrudRepository<Flight, UUID> {
 	@Query(
 			"SELECT f "
 			+ "FROM Flight f JOIN f.fares fa "
-			+ "WHERE f.departure.municipalityCode = :departureMunicipalityCode "
-			+ "AND f.destination.municipalityCode = :destinationMunicipalityCode "
+			+ "WHERE f.departure.id = :departureId "
+			+ "AND f.destination.id = :destinationId "
 			+ "AND fa.id = :fareId "
 			+ "AND :departureDate BETWEEN f.startDateTime AND f.endDateTime "
 			)
 	public List<Flight> findAvailableFlights(
-			@Param("departureMunicipalityCode") String departureMunicipalityCode, 
-			@Param("destinationMunicipalityCode") String destinationMunicipalityCode,
-			@Param("fareId") String fareId,
+			@Param("departureId") UUID departureId, 
+			@Param("destinationId") UUID destinationId,
+			@Param("fareId") UUID fareId,
 			@Param("departureDate") Date departureDate
 	);
 

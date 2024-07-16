@@ -52,7 +52,7 @@ message PaginatedFares {
 // FLIGHTS
 
 service FlightService {
-  rpc saveOrUpdate(Flight) returns (Flight) {};
+  rpc saveOrUpdate(FlightDto) returns (Flight) {};
   rpc delete (IdDto) returns (Flight) {};
   rpc find(QueryDto) returns (PaginatedFlights) {};
   rpc findOne(IdDto) returns (Flight) {};
@@ -71,6 +71,7 @@ message Flight {
   Airport destination = 9;     // admin
   Promotion promotion = 10;    // admin
   repeated Fare fares = 11;    // admin
+  uint32 seats = 12;
 }
 enum Frequency {
   HOURLY = 0;
@@ -94,6 +95,10 @@ message PaginatedFlights {
 
 // message Airports { repeated Airport airports = 1; }
 
+service AirportService{
+  rpc findAll(IdDto) returns (PaginatedAirports){};
+}
+
 message Airport {
   string id = 1;
   string name = 2;
@@ -102,24 +107,33 @@ message Airport {
   string nationalCode = 5;
 }
 
+message PaginatedAirports {
+  uint32 elementsNumber = 1;
+  repeated Airport airports = 2;
+}
+
 message SearchFlightsDto{
-  string departureMunicipalityCode = 1;
-  string destinationMunicipalityCode = 2;
+  string departureAirportId = 1;
+  string destinationAirportId = 2;
   uint64 departureDate = 3;
   Fare fare = 4;
 }
 
 message AvailableFlights{
-  repeated AvailableFlight availableFlight = 1;
+  repeated Flight availableFlight = 1;
 }
 
-message AvailableFlight {
+message FlightDto{
   string id = 1;               // microservice
   string name = 2;             // admin
-  uint64 departureDateTime = 3;    // admin
-  float distance = 4;          // microservice
-  Airport departure = 5;       // admin
-  Airport destination = 6;     // admin
-  Promotion promotion = 7;    // admin
-  repeated Fare fares = 8;    // admin
+  uint64 startDateTime = 3;    // admin
+  uint64 endDateTime = 4;      // admin
+  float distance = 5;          // microservice
+  Frequency frequencyType = 6; // admin
+  uint32 frequency = 7;        // admin
+  string departure = 8;       // admin
+  string destination = 9;     // admin
+  string promotion = 10;    // admin
+  repeated string fares = 11;    // admin
+  uint32 seats = 12;
 }

@@ -38,6 +38,9 @@ public class Flight extends CustomBaseEntity {
     @Column()
     private int frequency;
     
+    @Column()
+    private int seats;
+    
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Fare> fares;
 
@@ -50,7 +53,6 @@ public class Flight extends CustomBaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     private Promotion promotion;
 
-    
 	public String getName() {
 		return name;
 	}
@@ -99,6 +101,14 @@ public class Flight extends CustomBaseEntity {
 		this.frequency = frequency;
 	}
 
+	public int getSeats() {
+		return seats;
+	}
+
+	public void setSeats(int seats) {
+		this.seats = seats;
+	}
+
 	public List<Fare> getFares() {
 		return fares;
 	}
@@ -130,7 +140,4 @@ public class Flight extends CustomBaseEntity {
 	public void setPromotion(Promotion promotion) {
 		this.promotion = promotion;
 	}
-    
-    
-    
 }

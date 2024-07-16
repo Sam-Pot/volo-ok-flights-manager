@@ -35,7 +35,7 @@ public class FareService {
 		this.fareRepository.deleteById(UUID.fromString(fareId));
 	}
 	
-	public List<Fare> findAll(String query) throws Exception{
+	public List<Fare> findAll() throws Exception{
 		return (List<Fare>) this.fareRepository.findAll();
 	}
 }

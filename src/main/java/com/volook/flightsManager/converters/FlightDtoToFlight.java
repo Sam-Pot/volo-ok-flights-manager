@@ -31,13 +31,16 @@ public class FlightDtoToFlight implements Converter<flightsManager.Flights.Fligh
 		}
 		
 		com.volook.flightsManager.entities.Flight flight = new com.volook.flightsManager.entities.Flight();
-		flight.setId(UUID.fromString(source.getId()));
+		if(source.getId()!=null && !source.getId().isEmpty()) {
+			flight.setId(UUID.fromString(source.getId()));
+		}
 		flight.setName(source.getName());
 		flight.setStartDateTime(new Date(source.getStartDateTime()));
 		flight.setEndDateTime(new Date(source.getEndDateTime()));
 		flight.setDistance(source.getDistance());
 		flight.setFrequencyType(com.volook.flightsManager.utils.Frequency.valueOf(source.getFrequencyType().toString()));
 		flight.setFrequency(source.getFrequency());
+		flight.setSeats(source.getSeats());
 		flight.setDeparture(airportDtoToAirport.convert(source.getDeparture()));
 		flight.setDestination(airportDtoToAirport.convert(source.getDestination()));
 		flight.setPromotion(promotionDtoToPromotion.convert(source.getPromotion()));

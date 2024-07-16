@@ -14,7 +14,9 @@ public class FareDtoToFare implements Converter<flightsManager.Flights.Fare, com
 	public com.volook.flightsManager.entities.Fare convert(Fare source) {
 		com.volook.flightsManager.entities.Fare fare = new com.volook.flightsManager.entities.Fare();
 		fare.setEditable(source.getEditable());
-		fare.setId(UUID.fromString(source.getId()));
+		if(source.getId()!=null && !source.getId().isEmpty()) {
+			fare.setId(UUID.fromString(source.getId()));
+		}
 		fare.setModificationPrice(source.getModificationPrice());
 		fare.setName(source.getName());
 		fare.setPrice(source.getPrice());

@@ -41,7 +41,8 @@ public class PromotionController extends PromotionServiceGrpc.PromotionServiceIm
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}
-
+	
+	@Override
 	public void saveOrUpdate(Promotion promotion, StreamObserver<Promotion> responseObserver) {
 		if (promotion == null) {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
@@ -54,6 +55,7 @@ public class PromotionController extends PromotionServiceGrpc.PromotionServiceIm
 		}
 	}
 
+	@Override
 	public void delete(IdDto idDto, StreamObserver<Promotion> responseObserver) {
 		if (idDto == null) {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
@@ -62,14 +64,15 @@ public class PromotionController extends PromotionServiceGrpc.PromotionServiceIm
 			Promotion promotionToDelete = entityToDto.convert(this.promotionService.findOne(idDto.getId()));
 			this.promotionService.delete(idDto.getId());
 			responseObserver
-					.onNext(entityToDto.convert(this.promotionService.saveOrUpdate(dtoToEntity.convert(promotionToDelete))));
+					.onNext(entityToDto.convert(dtoToEntity.convert(promotionToDelete)));
 			responseObserver.onCompleted();
 		} catch (Exception e) {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}
 
-	public void find(QueryDto request, StreamObserver<PaginatedPromotions> responseObserver) {
+	@Override
+	public void findAll(QueryDto request, StreamObserver<PaginatedPromotions> responseObserver) {
 		 try {
 			 List<com.volook.flightsManager.entities.Promotion> promotions = this.promotionService.findAll(null);
 			 List<Promotion> response = new LinkedList<>();
@@ -87,6 +90,7 @@ public class PromotionController extends PromotionServiceGrpc.PromotionServiceIm
 		 }
 	 }
 	
+	@Override
 	public void getLoyaltyCustomerPromotions(QueryDto query, StreamObserver<PaginatedPromotions> responseObserver) {
 		 try {
 			 List<com.volook.flightsManager.entities.Promotion> promotions = this.promotionService.getLoyaltyCustomerPromotions(query.toString());

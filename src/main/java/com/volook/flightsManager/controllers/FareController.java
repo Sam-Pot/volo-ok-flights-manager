@@ -42,7 +42,7 @@ public class FareController extends FareServiceGrpc.FareServiceImplBase {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}
-
+	@Override
 	public void saveOrUpdate(Fare fare, StreamObserver<Fare> responseObserver) {
 		if (fare == null) {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
@@ -54,7 +54,8 @@ public class FareController extends FareServiceGrpc.FareServiceImplBase {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}
-
+	
+	@Override
 	public void delete(IdDto idDto, StreamObserver<Fare> responseObserver) {
 		if (idDto == null) {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
@@ -63,16 +64,17 @@ public class FareController extends FareServiceGrpc.FareServiceImplBase {
 			Fare fareToDelete = entityToDto.convert(this.fareService.findOne(idDto.getId()));
 			this.fareService.delete(idDto.getId());
 			responseObserver
-					.onNext(entityToDto.convert(this.fareService.saveOrUpdate(dtoToEntity.convert(fareToDelete))));
+					.onNext(entityToDto.convert(dtoToEntity.convert(fareToDelete)));
 			responseObserver.onCompleted();
 		} catch (Exception e) {
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}
-
-	public void find(QueryDto request, StreamObserver<PaginatedFares> responseObserver) {
+	
+	@Override
+	public void findAll(QueryDto request, StreamObserver<PaginatedFares> responseObserver) {
 		 try {
-			 List<com.volook.flightsManager.entities.Fare> fares = this.fareService.findAll(null);
+			 List<com.volook.flightsManager.entities.Fare> fares = this.fareService.findAll();
 			 List<Fare> response = new LinkedList<>();
 			 for(com.volook.flightsManager.entities.Fare elem: fares) {
 				 response.add(entityToDto.convert(elem));
