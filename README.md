@@ -1,6 +1,6 @@
 # Flight-manager
 
-flight-manager is a simple java boilerplate configured with springboot and grpc that manages flight in voloOk application.
+flight-manager is a java project configured with springboot and grpc that manages flight in voloOk application.
 
 ### Environment Configuration
 
@@ -15,34 +15,16 @@ The following params must be specified in the src/main/resources/env.properties 
 * DB_DDL: none' in production to avoid data loss, 'update' to generate tables
 ### Grpc service configurations
 
-It's necessary to set the following configurations.
-##### Generating communication services
-1. Add the .proto file used by your services in /src/main/proto
-2. Launch the Maven clean command.
-3. Launch the Maven install command.
+##### Generate proto resources and maven dependencies.
 
-##### Grpc communications
+1. Launch the Maven clean command.
+2. Launch the Maven install command.
+3. Build the application in the war format.
+4. Deploy the generated war using an Apache Tomcat.
 
-1. Add the @GrpcService on your controllers which implements the proto services;
-Example:
-
-
-```java
-@GrpcService
-public class ExampleController extends GenericServiceGrpc.GenericServiceImplBase{
-	
-	@Override
-	public void sendMessage(MessageReq request, StreamObserver<MessageRes> responseObserver) {
-		MessageRes response = MessageRes
-				.newBuilder()
-				.setResponse(request)
-				.build();
-		responseObserver.onNext(response);
-		responseObserver.onCompleted();
-	}
-}
-
-```
-
-
+#### Database configuration
+1. Install MySQL and create a schema named volook_flight_manager.
+2. Make sure that the configuration in the env.properties respect those in your db.
+3. Launch the application with DB_DLL=update to generate tables.
+4. Populate the airport table.
 
