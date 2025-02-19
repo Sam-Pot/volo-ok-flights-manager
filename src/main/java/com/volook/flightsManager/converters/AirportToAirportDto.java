@@ -14,9 +14,9 @@ public class AirportToAirportDto implements Converter<com.volook.flightsManager.
 		Airport airport = Airport.newBuilder()
 				.setId(source.getId().toString())
 				.setName(source.getName())
-				.setMunicipality(source.getMunicipality())
-				.setMunicipalityCode(source.getMunicipalityCode())
-				.setNationalCode(source.getNationalCode())
+				.setIata(source.getIata())
+				.setLatitude(source.getLatitude())
+				.setLongitude(source.getLongitude())
 				.build();
 		return airport;
 	}

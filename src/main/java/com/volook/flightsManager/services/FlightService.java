@@ -19,7 +19,6 @@ import com.volook.flightsManager.repositories.PromotionRepository;
 
 import flightsManager.Flights.FlightDto;
 
-
 @Service
 public class FlightService {
 
@@ -45,8 +44,8 @@ public class FlightService {
 			throw new IllegalArgumentException();
 		}
 		Promotion promotion = this.promotionRepository.findById(UUID.fromString(flight.getPromotion())).get();
-		Airport departure = this.airportRepository.findById(UUID.fromString(flight.getDeparture())).get();
-		Airport destination = this.airportRepository.findById(UUID.fromString(flight.getDestination())).get();
+		Airport departure = this.airportRepository.findById(flight.getDeparture()).get();
+		Airport destination = this.airportRepository.findById(flight.getDestination()).get();
 		List<Fare> fares = new LinkedList<>();
 		for(String f: flight.getFaresList()) {
 			fares.add(this.fareRepository.findById(UUID.fromString(f)).get());
@@ -81,8 +80,8 @@ public class FlightService {
 
 	public List<Flight> generateAvailableFlights(String departureAirportId,
 			String destinationAirportId, Fare fare, Date departureDate) throws Exception {
-		List<Flight> staticFlights = this.flightRepository.findAvailableFlights(UUID.fromString(departureAirportId),
-				UUID.fromString(destinationAirportId), fare.getId(), departureDate);
+		List<Flight> staticFlights = this.flightRepository.findAvailableFlights(departureAirportId,
+				destinationAirportId, fare.getId(), departureDate);
 		return staticFlights;
 	}
 }

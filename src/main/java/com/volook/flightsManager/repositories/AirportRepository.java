@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.volook.flightsManager.entities.Airport;
 
 @Repository()
-public interface AirportRepository  extends CrudRepository<Airport, UUID>{
+public interface AirportRepository  extends CrudRepository<Airport,String>{
 
 }

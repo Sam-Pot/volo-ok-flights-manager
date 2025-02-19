@@ -23,8 +23,8 @@ public interface FlightRepository extends CrudRepository<Flight, UUID> {
 			+ "AND :departureDate BETWEEN f.startDateTime AND f.endDateTime "
 			)
 	public List<Flight> findAvailableFlights(
-			@Param("departureId") UUID departureId, 
-			@Param("destinationId") UUID destinationId,
+			@Param("departureId") String departureId, 
+			@Param("destinationId") String destinationId,
 			@Param("fareId") UUID fareId,
 			@Param("departureDate") Date departureDate
 	);

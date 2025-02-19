@@ -2,6 +2,7 @@ package com.volook.flightsManager.controllers;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -10,7 +11,7 @@ import com.volook.flightsManager.entities.Airport;
 import com.volook.flightsManager.services.AirportService;
 
 import flightsManager.AirportServiceGrpc;
-import flightsManager.Flights.IdDto;
+import flightsManager.Flights;
 import flightsManager.Flights.PaginatedAirports;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
@@ -42,4 +43,16 @@ public class AirportController extends AirportServiceGrpc.AirportServiceImplBase
 			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
 		}
 	}
+	
+	@Override
+	public void findOne(flightsManager.Flights.IdDto request, StreamObserver<flightsManager.Flights.Airport> responseObserver) {
+		try {
+			Airport airportFound = this.airportService.findOne(request.getId());
+			responseObserver.onNext(airportToAirportDto.convert(airportFound));
+			responseObserver.onCompleted();
+		}catch(Exception e) {
+			responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
+		}  
+	}
+	
 }
